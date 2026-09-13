@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>For You 💙</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+    <main class="container">
+
+        <!-- SCREEN 1 -->
+        <section class="screen active" id="screen1">
+
+            <div class="emoji">💙</div>
+
+            <h1>
+                100 Reasons<br>
+                Why I Love You
+            </h1>
+
+            <p class="small-text">
+                nyenyenye
+            </p>
+
+            <button onclick="nextScreen(2)">
+                paki pindot →
+            </button>
+
+        </section>
+
+
+        <!-- SCREEN 2 -->
+        <section class="screen" id="screen2">
+
+            <div class="emoji">💌</div>
+
+            <div class="message-card">
+
+                <p>
+                    “I wanted to make 100 reasons why I like u,
+                    but I figured that'd be kinda weird(weirdo) since m
+                    still courting you 😭 so here's 10 for now hehe.”
+                </p>
+
+            </div>
+
+            <button onclick="nextScreen(3)">
+                gusto mo makita? ayaw mo? wag na wag na →
+            </button>
+
+        </section>
+
+
+        <!-- SCREEN 3 -->
+        <section class="screen" id="screen3">
+
+            <div class="emoji">💙</div>
+
+            <h2>
+                10 Things I Like About You
+            </h2>
+
+            <p class="subtitle">
+                one at a time tenks :)
+            </p>
+
+            <div class="reason-area">
+
+                <div class="reason-card" id="reasonCard">
+
+                    <span
+                        class="number"
+                        id="number"
+                    >
+                        01
+                    </span>
+
+                    <p id="reason"></p>
+
+                </div>
+
+            </div>
+
+            <button
+                id="nextReason"
+                onclick="showNextReason()"
+            >
+                Next →
+            </button>
+
+        </section>
+
+
+        <!-- FINAL SCREEN -->
+        <section class="screen" id="screen4">
+
+            <div class="emoji">💙</div>
+
+            <h1>
+                That's it...
+            </h1>
+
+            <p class="final-text">
+                for now. 😭
+            </p>
+
+            <p class="tiny-final">
+                next time na 100 baby
+            </p>
+
+        </section>
+
+    </main>
+
+
+<script id="reasons-data" type="application/json">
+    {{ reasons | tojson }}
+</script>
+
+<script>
+
+    const reasons = JSON.parse(
+        document.getElementById("reasons-data").textContent
+    );
+
+    let currentReason = 0;
+
+
+        function nextScreen(screenNumber) {
+
+            document
+                .querySelectorAll(".screen")
+                .forEach(screen => {
+                    screen.classList.remove("active");
+                });
+
+            const next =
+                document.getElementById(
+                    "screen" + screenNumber
+                );
+
+            next.classList.add("active");
+
+
+            if (screenNumber === 3) {
+
+                setTimeout(() => {
+                    showReason(0);
+                }, 300);
+
+            }
+
+        }
+
+
+        function showReason(index) {
+
+            const card =
+                document.getElementById("reasonCard");
+
+            const number =
+                document.getElementById("number");
+
+            const reason =
+                document.getElementById("reason");
+
+
+            card.classList.remove("show");
+
+
+            setTimeout(() => {
+
+                number.textContent =
+                    String(index + 1).padStart(2, "0");
+
+                reason.textContent =
+                    reasons[index];
+
+                card.classList.add("show");
+
+            }, 250);
+
+        }
+
+
+        function showNextReason() {
+
+            if (currentReason < reasons.length - 1) {
+
+                currentReason++;
+
+                showReason(currentReason);
+
+
+                if (
+                    currentReason ===
+                    reasons.length - 1
+                ) {
+
+                    document.getElementById(
+                        "nextReason"
+                    ).innerHTML = "Finish →";
+
+                }
+
+            } else {
+
+                nextScreen(4);
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
